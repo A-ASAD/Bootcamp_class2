@@ -1,0 +1,25 @@
+name: Basic React App
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Node
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: 13
+    - name: Get Yarn pre-requisites
+      run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    - name: Installing yarn
+      run: sudo apt update && sudo apt install yarn
+    - name: Building React App
+      run: yarn build
+    - name: Installing Surge
+      run: npm install --global surge
+    - name: Run surge
+      run: surge ./build bootcamp_class2_abdurrahman.surge.sh --token ${{ secrets.SURGE_TOKEN }}
